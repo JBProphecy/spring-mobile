@@ -1,19 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import { Stack } from "expo-router";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+export type HttpResponseBody = unknown
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default function RootLayout()
-{
-  return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <Stack>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-      </Stack>
-    </GestureHandlerRootView>
-  )
+export async function parseJsonResponseBody(response: Response): Promise<HttpResponseBody> {
+  try { return await response.json() }
+  catch { throw new Error("Failed to parse response body as JSON.") }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

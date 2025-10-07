@@ -1,0 +1,87 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+import { Ionicons } from "@expo/vector-icons";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { AnimatedTabBar } from "./animated-tab-bar";
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+const Tab = createBottomTabNavigator()
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export function CustomTabs()
+{
+  return (
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: false
+      }}
+      tabBar={(props) => <AnimatedTabBar {...props} />}
+    >
+      <Tab.Screen
+        name="Example Screen One"
+        component={ExampleScreenOne}
+        options={{
+          tabBarIcon: ({ color, size }) => <Ionicons name="home" size={size} color={color} />,
+        }}
+      />
+      <Tab.Screen
+        name="Example Screen Two"
+        component={ExampleScreenTwo}
+        options={{
+          tabBarIcon: ({ color, size }) => <Ionicons name="airplane" size={size} color={color} />,
+        }}
+      />
+      <Tab.Screen
+        name="Example Screen Three"
+        component={ExampleScreenThree}
+        options={{
+          tabBarIcon: ({ color, size }) => <Ionicons name="apps" size={size} color={color} />,
+        }}
+      />
+      <Tab.Screen
+        name="Example Screen Four"
+        component={ExampleScreenFour}
+        options={{
+          tabBarIcon: ({ color, size }) => <Ionicons name="desktop" size={size} color={color} />,
+        }}
+      />
+      <Tab.Screen
+        name="Example Screen Five"
+        component={ExampleScreenFive}
+        options={{
+          tabBarIcon: ({ color, size }) => <Ionicons name="umbrella" size={size} color={color} />,
+        }}
+      />
+      <Tab.Screen
+        name="Example Screen Six"
+        component={ExampleScreenSix}
+        options={{
+          tabBarIcon: ({ color, size }) => <Ionicons name="cog" size={size} color={color} />,
+        }}
+      />
+      <Tab.Screen
+        name="Example Screen Seven"
+        component={ExampleScreenSeven}
+        options={{
+          tabBarIcon: ({ color, size }) => <Ionicons name="person-circle" size={size} color={color} />,
+        }}
+      />
+      <Tab.Screen
+        name="Example Screen Eight"
+        component={ExampleScreenEight}
+        options={{
+          tabBarIcon: ({ color, size }) => <Ionicons name="logo-xbox" size={size} color={color} />,
+        }}
+      />
+    </Tab.Navigator>
+  )
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

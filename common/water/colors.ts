@@ -1,19 +1,15 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import { Stack } from "expo-router";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+export type RgbString = `rgb(${number}, ${number}, ${number})`
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default function RootLayout()
-{
-  return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <Stack>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-      </Stack>
-    </GestureHandlerRootView>
-  )
-}
+export const RGB = {
+  8: "rgb(8, 8, 8)",
+  12: "rgb(12, 12, 12)",
+  16: "rgb(16, 16, 16)",
+  176: "rgb(176, 176, 176)",
+  208: "rgb(208, 208, 208)",
+} as const satisfies Record<number, RgbString>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

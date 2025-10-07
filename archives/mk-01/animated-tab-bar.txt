@@ -1,0 +1,108 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+import { Ionicons } from "@expo/vector-icons";
+import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
+import { useEffect, useRef } from "react";
+import { Dimensions, Pressable, ScrollView, StyleSheet } from "react-native";
+import Animated, { interpolate, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+const SCREEN_WIDTH: number = Dimensions.get("window").width
+const VISIBLE_TABS: number = 7 // probably don't ever change this --> nvm, play with it, it's cool
+const TAB_WIDTH: number = SCREEN_WIDTH / VISIBLE_TABS
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export function AnimatedTabBar({ state, descriptors, navigation, insets }: BottomTabBarProps)
+{
+  const currentIndex = useSharedValue(state.index)
+  const scrollRef = useRef<ScrollView | null>(null)
+
+  const handleTabPress = (index: number, routeName: string, isFocused: boolean) => {
+    if (!isFocused) {
+      navigation.navigate(routeName)
+      currentIndex.value = withTiming(index, { duration: 250 })
+    }
+  }
+
+  const handleScrollStart = () => {
+    
+  }
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      const scrollX = Math.max(0, state.index * TAB_WIDTH)
+      scrollRef.current.scrollTo({ x: scrollX, animated: true })
+    }
+  }, [state.index])
+
+  return (
+    <ScrollView
+      style={styles.scrollView}
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      contentContainerStyle={styles.animatedTabBar}
+      ref={scrollRef}
+      snapToInterval={TAB_WIDTH}
+      decelerationRate="fast"
+      scrollEnabled={true}
+      scrollEventThrottle={16}
+    >
+      {state.routes.map((route, index) => {
+        const isFocused: boolean = state.index === index
+        const animatedStyle = useAnimatedStyle(() => {
+          const distance = Math.abs(index - currentIndex.value)
+          const opacity = interpolate(distance, [0, 1, 2, 3], [1, 0.6, 0.4, 0.2])
+          const scale = interpolate(distance, [0, 1, 2, 3], [1, 0.85, 0.7, 0.5])
+          return {
+            opacity,
+            transform: [{ scale }]
+          }
+        })
+        const options = descriptors[route.key].options
+        const iconName = options.tabBarIcon
+          ? (options.tabBarIcon as any)({ focused: isFocused, color: "", size: 24 }).props.name
+          : "ellipse"
+        return (
+          <Pressable
+            key={route.key}
+            onPress={() => handleTabPress(index, route.name, isFocused)}
+            style={styles.tab}>
+            <Animated.View style={animatedStyle}>
+              <Ionicons
+                name={iconName}
+                size={32}
+                color={isFocused ? "white" : "gray"}
+              />
+            </Animated.View>
+          </Pressable>
+        )
+      })}
+    </ScrollView>
+  )
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+const styles = StyleSheet.create({
+  animatedTabBar: {
+    flexDirection: 'row',
+    paddingHorizontal: (VISIBLE_TABS % 2 === 1) ? (TAB_WIDTH * Math.floor(VISIBLE_TABS / 2)) : 0,
+    height: 64
+  },
+  scrollView: {
+    backgroundColor: '#000',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0
+  },
+  tab: {
+    width: TAB_WIDTH,
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
+})
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

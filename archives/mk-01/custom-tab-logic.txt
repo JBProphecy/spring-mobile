@@ -1,0 +1,446 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+import { Ionicons } from "@expo/vector-icons"
+import React, { createContext, useContext, useEffect, useMemo, useRef, useState } from "react"
+import { LayoutChangeEvent, Pressable, StyleSheet, Text, View } from "react-native"
+import Animated, { interpolate, SharedValue, useAnimatedScrollHandler, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// NOTES
+
+// I can see problem using insets like this and margins effecting snap, container widths, etc.
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// EXAMPLE SCREENS
+
+const ExampleScreenStyles = StyleSheet.create({
+  view: {
+    backgroundColor: "rgb(12, 12, 12)",
+    width: "100%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  text: {
+    fontSize: 24,
+    color: "white"
+  }
+})
+
+export function ExampleScreenOne() {
+  return (
+    <View style={ExampleScreenStyles.view}>
+      <Text style={ExampleScreenStyles.text}>Example Screen One</Text>
+    </View>
+  )
+}
+
+export function ExampleScreenTwo() {
+  return (
+    <View style={ExampleScreenStyles.view}>
+      <Text style={ExampleScreenStyles.text}>Example Screen Two</Text>
+    </View>
+  )
+}
+
+export function ExampleScreenThree() {
+  return (
+    <View style={ExampleScreenStyles.view}>
+      <Text style={ExampleScreenStyles.text}>Example Screen Three</Text>
+    </View>
+  )
+}
+
+export function ExampleScreenFour() {
+  return (
+    <View style={ExampleScreenStyles.view}>
+      <Text style={ExampleScreenStyles.text}>Example Screen Four</Text>
+    </View>
+  )
+}
+
+export function ExampleScreenFive() {
+  return (
+    <View style={ExampleScreenStyles.view}>
+      <Text style={ExampleScreenStyles.text}>Example Screen Five</Text>
+    </View>
+  )
+}
+
+export function ExampleScreenSix() {
+  return (
+    <View style={ExampleScreenStyles.view}>
+      <Text style={ExampleScreenStyles.text}>Example Screen Six</Text>
+    </View>
+  )
+}
+
+export function ExampleScreenSeven() {
+  return (
+    <View style={ExampleScreenStyles.view}>
+      <Text style={ExampleScreenStyles.text}>Example Screen Seven</Text>
+    </View>
+  )
+}
+
+export function ExampleScreenEight() {
+  return (
+    <View style={ExampleScreenStyles.view}>
+      <Text style={ExampleScreenStyles.text}>Example Screen Eight</Text>
+    </View>
+  )
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// ANIMATED SECTION DATA
+
+type IoniconProps = React.ComponentProps<typeof Ionicons>;
+type IoniconName = IoniconProps["name"]
+
+export type AnimatedSectionData = {
+  readonly key: string
+  readonly icon: IoniconName | null
+  readonly view: React.ReactNode
+}
+
+export const AnimatedSectionDataVariant = {
+  Account: {
+    key: "account",
+    icon: "desktop",
+    view: <ExampleScreenOne />
+  },
+  Profile: {
+    key: "profile",
+    icon: "game-controller",
+    view: <ExampleScreenTwo />
+  },
+  Search: {
+    key: "search",
+    icon: "dice",
+    view: <ExampleScreenThree />
+  },
+  Home: {
+    key: "home",
+    icon: "image",
+    view: <ExampleScreenFour />
+  },
+  Settings: {
+    key: "settings",
+    icon: "videocam",
+    view: <ExampleScreenFive />
+  },
+  Guide: {
+    key: "guide",
+    icon: "person",
+    view: <ExampleScreenSix />
+  },
+  Example: {
+    key: "example",
+    icon: "bookmarks",
+    view: <ExampleScreenEight />
+  }
+} as const satisfies Record<string, AnimatedSectionData>
+
+const AnimatedSectionDataVariantValues = Object.values(AnimatedSectionDataVariant)
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// ANIMATED SECTION CONSTANTS
+
+const TAB_BAR_CONTAINER_HEIGHT = 64
+const TAB_BAR_VISIBLE_ITEMS = 7
+const SECTION_COUNT = AnimatedSectionDataVariantValues.length
+const INITIAL_SECTION_INDEX = 0
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// ANIMATED SECTION DYNAMICS
+
+export type AnimatedSectionContext = {
+  currentSectionDecimal: SharedValue<number>
+  currentSectionInteger: number
+  setCurrentSectionInteger: React.Dispatch<React.SetStateAction<number>>
+  tabBarContainerWidth: number
+  setTabBarContainerWidth: React.Dispatch<React.SetStateAction<number>>
+  contentContainerWidth: number
+  setContentContainerWidth: React.Dispatch<React.SetStateAction<number>>
+  tabBarItemWidth: number
+  tabBarItemWidthToContentContainerWidthRatio: number
+}
+
+const AnimatedSectionContext = createContext<AnimatedSectionContext | null>(null)
+
+export function AnimatedSectionProvider({ children }: { children: React.ReactNode }) {
+  const currentSectionDecimal = useSharedValue(INITIAL_SECTION_INDEX)
+  const [currentSectionInteger, setCurrentSectionInteger] = useState<number>(INITIAL_SECTION_INDEX)
+  const [tabBarContainerWidth, setTabBarContainerWidth] = useState<number>(0)
+  const [contentContainerWidth, setContentContainerWidth] = useState<number>(0)
+  const tabBarItemWidth = useMemo(() => tabBarContainerWidth / TAB_BAR_VISIBLE_ITEMS, [tabBarContainerWidth]);
+  const tabBarItemWidthToContentContainerWidthRatio = useMemo(() => tabBarItemWidth / contentContainerWidth, [tabBarItemWidth, contentContainerWidth])
+  return (
+    <AnimatedSectionContext.Provider
+      children={children}
+      value={{
+        currentSectionDecimal,
+        currentSectionInteger,
+        setCurrentSectionInteger,
+        tabBarContainerWidth, // prolly don't need
+        setTabBarContainerWidth,
+        contentContainerWidth, // prolly don't need
+        setContentContainerWidth,
+        tabBarItemWidth,
+        tabBarItemWidthToContentContainerWidthRatio
+      }}
+    />
+  )
+}
+
+export function useAnimatedSectionContext(): AnimatedSectionContext {
+  const context = useContext(AnimatedSectionContext)
+  if (context === null) { throw new Error("Missing Animated Section Context Provider") }
+  return context
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// ANIMATED TAB BAR COMPONENT
+
+export function AnimatedTabBar()
+{
+  const {
+    currentSectionDecimal,
+    currentSectionInteger,
+    setCurrentSectionInteger,
+    tabBarContainerWidth,
+    setTabBarContainerWidth,
+    contentContainerWidth,
+    setContentContainerWidth,
+    tabBarItemWidth,
+    tabBarItemWidthToContentContainerWidthRatio
+  } = useAnimatedSectionContext()
+
+  const insets = useSafeAreaInsets()
+
+  const handleLayoutChange = (event: LayoutChangeEvent) => { setTabBarContainerWidth(event.nativeEvent.layout.width) }
+
+  const scrollViewRef = useRef<Animated.ScrollView | null>(null)
+
+  const scrollHandler = useAnimatedScrollHandler((event) => {
+    currentSectionDecimal.value = event.contentOffset.x / tabBarItemWidth
+  })
+
+  const handleTabItemPress = (index: number, isFocused: boolean) => {
+    if (!isFocused) {
+      setCurrentSectionInteger(index)
+      currentSectionDecimal.value = withTiming(index, { duration: 250 })
+    }
+  }
+
+  useEffect(() => {
+    if (scrollViewRef.current) {
+      const scrollX = Math.max(0, currentSectionInteger * tabBarItemWidth)
+      scrollViewRef.current.scrollTo({ x: scrollX, animated: true })
+    }
+  }, [currentSectionInteger])
+
+  return (
+    <Animated.ScrollView
+      ref={scrollViewRef}
+      style={[AnimatedTabBarStyles.container, { marginBottom: insets.bottom }]}
+      contentContainerStyle={[AnimatedTabBarStyles.scroller, {
+        paddingHorizontal: (TAB_BAR_VISIBLE_ITEMS % 2 === 1) ? (tabBarItemWidth * Math.floor(TAB_BAR_VISIBLE_ITEMS / 2)) : 0
+      }]}
+      onLayout={handleLayoutChange}
+      onScroll={scrollHandler}
+      onMomentumScrollEnd={() => {
+        console.log(currentSectionDecimal.value)
+        setCurrentSectionInteger(Math.round(currentSectionDecimal.value))
+      }}
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      snapToInterval={tabBarItemWidth}
+      decelerationRate="fast"
+      scrollEnabled={true}
+      scrollEventThrottle={16}
+    >
+      {AnimatedSectionDataVariantValues.map((data, index) => {
+        const isFocused = index === currentSectionInteger
+        const animatedStyle = useAnimatedStyle(() => {
+          const distance = Math.abs(index - currentSectionDecimal.value)
+          const opacity = interpolate(distance, [0, 1, 2, 3, 4], [1, 0.6, 0.4, 0.3, 0])
+          const scale = interpolate(distance, [0, 1, 2, 3, 4], [1, 0.85, 0.7, 0.5, 0])
+          return {
+            opacity,
+            transform: [{ scale }]
+          }
+        })
+        return (
+          <Pressable
+            key={data.key}
+            onPress={() => handleTabItemPress(index, isFocused)}
+            style={[AnimatedTabBarStyles.item, { width: tabBarItemWidth }]}>
+            <Animated.View style={animatedStyle}>
+              <Ionicons
+                name={data.icon !== null ? data.icon : "logo-xbox"}
+                size={1/2 * TAB_BAR_CONTAINER_HEIGHT}
+                color={isFocused ? "white" : "gray"}
+              />
+            </Animated.View>
+          </Pressable>
+        )
+      })}
+    </Animated.ScrollView>
+  )
+}
+
+export type TabIconItemProps = {
+  index: number
+}
+export const TabIconItem = React.memo(({ index }: TabIconItemProps) => {
+  const isFocused = index === currentSectionInteger
+  const animatedStyle = useAnimatedStyle(() => {
+    const distance = Math.abs(index - currentSectionDecimal.value)
+    const opacity = interpolate(distance, [0, 1, 2, 3, 4], [1, 0.6, 0.4, 0.3, 0])
+    const scale = interpolate(distance, [0, 1, 2, 3, 4], [1, 0.85, 0.7, 0.5, 0])
+    return {
+      opacity,
+      transform: [{ scale }]
+    }
+  })
+  return (
+    <Pressable
+      key={data.key}
+      onPress={() => handleTabItemPress(index, isFocused)}
+      style={[AnimatedTabBarStyles.item, { width: tabBarItemWidth }]}>
+      <Animated.View style={animatedStyle}>
+        <Ionicons
+          name={data.icon !== null ? data.icon : "logo-xbox"}
+          size={1/2 * TAB_BAR_CONTAINER_HEIGHT}
+          color={isFocused ? "white" : "gray"}
+        />
+      </Animated.View>
+    </Pressable>
+  )
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// ANIMATED TAB BAR STYLES
+
+const AnimatedTabBarStyles = StyleSheet.create({
+  container: {
+    backgroundColor: "rgb(8, 8, 8)",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: TAB_BAR_CONTAINER_HEIGHT
+  },
+  scroller: {
+    flexDirection: "row",
+    height: "100%"
+  },
+  item: {
+    height: "100%",
+    alignItems: "center",
+    justifyContent: "center"
+  }
+})
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// ANIMATED CONTENT CONTAINER COMPONENT
+
+export function AnimatedContextContainer()
+{
+  const {
+    currentSectionDecimal,
+    currentSectionInteger,
+    setCurrentSectionInteger,
+    tabBarContainerWidth,
+    setTabBarContainerWidth,
+    contentContainerWidth,
+    setContentContainerWidth,
+    tabBarItemWidth,
+    tabBarItemWidthToContentContainerWidthRatio
+  } = useAnimatedSectionContext()
+
+  const insets = useSafeAreaInsets()
+
+  const handleLayoutChange = (event: LayoutChangeEvent) => { setContentContainerWidth(event.nativeEvent.layout.width) }
+
+  const scrollViewRef = useRef<Animated.ScrollView | null>(null)
+
+  const scrollHandler = useAnimatedScrollHandler((event) => {
+    currentSectionDecimal.value = event.contentOffset.x / contentContainerWidth
+  })
+
+  useEffect(() => {
+    if (scrollViewRef.current) {
+      const scrollX = Math.max(0, currentSectionInteger * contentContainerWidth)
+      scrollViewRef.current.scrollTo({ x: scrollX, animated: true })
+    }
+  }, [currentSectionInteger])
+
+  return (
+    <Animated.ScrollView
+      ref={scrollViewRef}
+      style={[AnimatedContentContainerStyles.container, {
+        marginBottom: insets.bottom + TAB_BAR_CONTAINER_HEIGHT,
+        marginTop: insets.top
+      }]}
+      contentContainerStyle={AnimatedContentContainerStyles.scroller}
+      onLayout={handleLayoutChange}
+      onScroll={scrollHandler}
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      snapToInterval={contentContainerWidth}
+      decelerationRate="fast"
+      scrollEnabled={true}
+      scrollEventThrottle={16}
+    >
+      {AnimatedSectionDataVariantValues.map((data, index) => {
+        const animatedStyle = useAnimatedStyle(() => {
+          const distance = Math.abs(index - currentSectionDecimal.value)
+          const opacity = interpolate(distance, [0, 1, 2, 3, 4], [1, 0.6, 0.4, 0.3, 0]) // prolly change later
+          const scale = interpolate(distance, [0, 1, 2, 3, 4], [1, 0.85, 0.7, 0.5, 0])
+          return {
+            opacity,
+            transform: [{ scale }]
+          }
+        })
+        return (
+          <Animated.View key={data.key} style={[animatedStyle, AnimatedContentContainerStyles.animatedView, { width: contentContainerWidth }]}>
+            {data.view}
+          </Animated.View>
+        )
+      })}
+    </Animated.ScrollView>
+  )
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// ANIMATED CONTENT CONTAINER STYLES
+
+const AnimatedContentContainerStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "rgb(8, 8, 8)",
+  },
+  scroller: {
+    flexDirection: "row",
+    height: "100%"
+  },
+  animatedView: {
+    height: "100%",
+    alignItems: "center",
+    justifyContent: "center"
+  }
+})
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
