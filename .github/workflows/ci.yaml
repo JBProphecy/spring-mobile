@@ -14,13 +14,19 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
       
+      - name: Prepare PNPM
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10
+          run_install: false
+      
       - name: Prepare Node
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: pnpm
       
-      - name: Enable corepack
+      - name: Enable Corepack
         run: corepack enable
 
       - name: Install Dependencies
