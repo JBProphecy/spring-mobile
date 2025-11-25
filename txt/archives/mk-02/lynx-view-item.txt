@@ -1,0 +1,34 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+import { LayoutChangeEvent } from "react-native"
+import Animated, { SharedValue, useAnimatedStyle } from "react-native-reanimated"
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export type LynxViewItemProps = {
+  index: number
+  width?: number
+  height?: number
+  element: React.ReactNode
+  sharedCurrentScrollFactor: SharedValue<number>
+  handleLayout: (event: LayoutChangeEvent) => void
+}
+
+export function LynxViewItem(props: LynxViewItemProps)
+{
+  const { index, width, height, element, sharedCurrentScrollFactor, handleLayout } = props
+
+  const animatedStyle = useAnimatedStyle(() => {
+    // const distance = Math.abs(index - sharedCurrentScrollFactor.value)
+    // const opacity = interpolate(distance, [0, 0.5, 1], [1, 0, 0])
+    return {}
+  })
+
+  return (
+    <Animated.View style={[animatedStyle, { width: width, height: height }]} onLayout={handleLayout}>
+      {element}
+    </Animated.View>
+  )
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

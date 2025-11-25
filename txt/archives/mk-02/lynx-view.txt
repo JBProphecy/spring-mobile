@@ -1,0 +1,77 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+import { useListItemLayoutIndexMap } from "@/common/vanilla/hooks/use-list-item-layout-index-map"
+import { useMemo } from "react"
+import Animated, { interpolate, scrollTo, useAnimatedReaction, useAnimatedRef, useAnimatedScrollHandler } from "react-native-reanimated"
+import { lynxStyles } from "./lynx-styles"
+import { LynxViewItem } from "./lynx-view-item"
+import { LynxHook } from "./use-lynx"
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export type LynxViewProps = {
+  lynxHook: LynxHook,
+  lynxViewListWidth: number,
+  lynxViewListHeight: number
+}
+
+export function LynxView(props: LynxViewProps)
+{
+  const { lynxHook, lynxViewListWidth, lynxViewListHeight } = props
+
+  const { listItemLayoutIndexMap: lynxViewListItemLayoutIndexMap, handleLayoutListItem: handleLayoutLynxViewListItem } = useListItemLayoutIndexMap(lynxHook.lynxSectionCount)
+  
+  const lynxViewScrollPositionArray = useMemo(() => {
+    return lynxViewListItemLayoutIndexMap !== null
+      ? Object.values(lynxViewListItemLayoutIndexMap).map(layout => layout.x)
+      : null
+  }, [lynxViewListItemLayoutIndexMap])
+
+  const lynxViewScrollHandler = useAnimatedScrollHandler({
+    onScroll: (event) => {
+      if (lynxViewScrollPositionArray === null) { return }
+      const currentScrollPosition = event.contentOffset.x
+      const updatedScrollFactor = interpolate(currentScrollPosition, [lynxViewScrollPositionArray[lynxHook.lynxFloorScrollFactor.value], lynxViewScrollPositionArray[lynxHook.lynxCeilingScrollFactor.value]], [lynxHook.lynxFloorScrollFactor.value, lynxHook.lynxCeilingScrollFactor.value])
+      if (updatedScrollFactor !== undefined) { lynxHook.lynxCurrentScrollFactor.set(updatedScrollFactor)}
+    }
+  })
+
+  const lynxViewRef = useAnimatedRef<Animated.FlatList>()
+  useAnimatedReaction(
+    () => lynxHook.lynxCurrentScrollFactor.value, (updatedScrollFactor) => {
+      if (lynxViewScrollPositionArray === null) { return }
+      const updatedScrollPosition = interpolate(updatedScrollFactor, [lynxHook.lynxFloorScrollFactor.value, lynxHook.lynxCeilingScrollFactor.value], [lynxViewScrollPositionArray[lynxHook.lynxFloorScrollFactor.value], lynxViewScrollPositionArray[lynxHook.lynxCeilingScrollFactor.value]])
+      if (updatedScrollPosition !== undefined) { scrollTo(lynxViewRef, updatedScrollPosition, 0, true) }
+    }, [] // idk for deps
+  )
+
+  return (
+    <Animated.FlatList
+      ref={lynxViewRef}
+      style={[lynxStyles.lynxView, { width: lynxViewListWidth, height: lynxViewListHeight }]}
+      contentContainerStyle={[lynxStyles.lynxViewList, {
+        paddingLeft: lynxViewListItemLayoutIndexMap !== null ? lynxViewListWidth / 2 - lynxViewListItemLayoutIndexMap[0].width / 2 : undefined,
+        paddingRight: lynxViewListItemLayoutIndexMap !== null ? lynxViewListWidth / 2 - lynxViewListItemLayoutIndexMap[lynxHook.lynxSectionCount - 1].width / 2 : undefined
+      }]}
+      horizontal
+      onScroll={lynxViewScrollHandler}
+      showsHorizontalScrollIndicator={false}
+      snapToOffsets={lynxViewScrollPositionArray || undefined}
+      decelerationRate="fast"
+      data={lynxHook.lynxSectionArray}
+      keyExtractor={(item) => item.lynxSectionKey}
+      renderItem={({ item, index }) => (
+        <LynxViewItem
+          key={item.lynxSectionKey}
+          index={index}
+          height={lynxViewListHeight}
+          element={item.lynxViewItemElement}
+          sharedCurrentScrollFactor={lynxHook.lynxCurrentScrollFactor}
+          handleLayout={handleLayoutLynxViewListItem(index)}
+        />
+      )}
+    ></Animated.FlatList>
+  )
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

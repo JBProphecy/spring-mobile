@@ -1,0 +1,24 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+import { useState } from "react";
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export type TextInputStateHook = {
+  isHovered: boolean
+  setIsHovered: React.Dispatch<React.SetStateAction<boolean>>
+  isFocused: boolean
+  setIsFocused: React.Dispatch<React.SetStateAction<boolean>>
+}
+export function useTextInputState()
+{
+  const [isFocused, setIsFocused] = useState<boolean>(false)
+  const [isHovered, setIsHovered] = useState<boolean>(false)
+
+  return {
+    isFocused, setIsFocused,
+    isHovered, setIsHovered
+  } as const satisfies TextInputStateHook
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

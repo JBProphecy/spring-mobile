@@ -1,0 +1,73 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+import { JaxNumber } from "@/common/water/utilities/validation/number"
+import { useState } from "react"
+import { DerivedValue, SharedValue, useAnimatedReaction, useDerivedValue, useSharedValue } from "react-native-reanimated"
+import { scheduleOnRN } from "react-native-worklets"
+import { LynxSection } from "./lynx-data"
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export type UseLynxProps = {
+  sectionArray: LynxSection[]
+  defaultSectionIndex?: number
+}
+
+export type LynxHook = {
+  lynxSectionArray: LynxSection[]
+  lynxSectionCount: number
+  lynxCurrentScrollFactor: SharedValue<number>
+  lynxFloorScrollFactor: DerivedValue<number>
+  lynxCeilingScrollFactor: DerivedValue<number>
+  lynxActiveSectionIndexUI: DerivedValue<number>
+  lynxActiveSectionIndexRN: number
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export function useLynx(props: UseLynxProps): LynxHook
+{
+  // Extracted Props
+
+  const { sectionArray, defaultSectionIndex = 0 } = props
+
+  // Derived Constants
+
+  const sectionCount = sectionArray.length
+
+  // Validation Stuff
+
+  if (process.env.NODE_ENV === "development") {
+    JaxNumber.verifyIsGreaterThan(sectionCount, 0)
+    JaxNumber.verifyIsInteger(defaultSectionIndex)
+    JaxNumber.verifyIsGreaterThanOrEqualTo(defaultSectionIndex, 0)
+    JaxNumber.verifyIsLessThan(defaultSectionIndex, sectionCount)
+  }
+
+  // Shared/State Stuff
+
+  const currentScrollFactor = useSharedValue(defaultSectionIndex)
+  const floorScrollFactor = useDerivedValue(() => Math.floor(currentScrollFactor.value))
+  const ceilingScrollFactor = useDerivedValue(() => Math.ceil(currentScrollFactor.value))
+
+  const activeSectionIndexUI = useDerivedValue(() => Math.round(currentScrollFactor.value))
+  const [activeSectionIndexRN, setActiveSectionIndexRN] = useState<number>(defaultSectionIndex)
+
+  useAnimatedReaction(
+    () => activeSectionIndexUI.value, (updated, previous) => {
+      if (updated !== previous) { scheduleOnRN(() => setActiveSectionIndexRN(updated)) }
+    }, []
+  )
+
+  return {
+    lynxSectionArray: sectionArray,
+    lynxSectionCount: sectionCount,
+    lynxCurrentScrollFactor: currentScrollFactor,
+    lynxFloorScrollFactor: floorScrollFactor,
+    lynxCeilingScrollFactor: ceilingScrollFactor,
+    lynxActiveSectionIndexUI: activeSectionIndexUI,
+    lynxActiveSectionIndexRN: activeSectionIndexRN
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

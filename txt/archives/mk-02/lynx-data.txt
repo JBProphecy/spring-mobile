@@ -1,0 +1,79 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+import { ExampleScreenOne, ExampleScreenThree, ExampleScreenTwo } from "@/experimental/lynx-container/data"
+import { LynxText } from "./lynx-text"
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export type LynxSection = {
+  lynxSectionKey: string
+  lynxBarItemElement: React.ReactNode
+  lynxViewItemElement: React.ReactNode
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const LYNX_SECTION_ARRAY = [
+  {
+    lynxSectionKey: "one",
+    lynxBarItemElement: <LynxText text="One" />,
+    lynxViewItemElement: <ExampleScreenOne />
+  },
+  {
+    lynxSectionKey: "two",
+    lynxBarItemElement: <LynxText text="Two" />,
+    lynxViewItemElement: <ExampleScreenTwo />
+  },
+  {
+    lynxSectionKey: "three",
+    lynxBarItemElement: <LynxText text="Three" />,
+    lynxViewItemElement: <ExampleScreenThree />
+  },
+  {
+    lynxSectionKey: "four",
+    lynxBarItemElement: <LynxText text="One" />,
+    lynxViewItemElement: <ExampleScreenOne />
+  },
+  {
+    lynxSectionKey: "five",
+    lynxBarItemElement: <LynxText text="Two" />,
+    lynxViewItemElement: <ExampleScreenTwo />
+  },
+  {
+    lynxSectionKey: "six",
+    lynxBarItemElement: <LynxText text="Three" />,
+    lynxViewItemElement: <ExampleScreenThree />
+  },
+  {
+    lynxSectionKey: "seven",
+    lynxBarItemElement: <LynxText text="One" />,
+    lynxViewItemElement: <ExampleScreenOne />
+  },
+  {
+    lynxSectionKey: "eight",
+    lynxBarItemElement: <LynxText text="Two" />,
+    lynxViewItemElement: <ExampleScreenTwo />
+  },
+  {
+    lynxSectionKey: "nine",
+    lynxBarItemElement: <LynxText text="Three" />,
+    lynxViewItemElement: <ExampleScreenThree />
+  },
+  {
+    lynxSectionKey: "ten",
+    lynxBarItemElement: <LynxText text="One" />,
+    lynxViewItemElement: <ExampleScreenOne />
+  },
+  {
+    lynxSectionKey: "eleven",
+    lynxBarItemElement: <LynxText text="Two" />,
+    lynxViewItemElement: <ExampleScreenTwo />
+  },
+  {
+    lynxSectionKey: "twelve",
+    lynxBarItemElement: <LynxText text="Three" />,
+    lynxViewItemElement: <ExampleScreenThree />
+  }
+] as const satisfies LynxSection[]
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

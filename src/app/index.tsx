@@ -1,0 +1,22 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+import { SafeAreaView } from "react-native-safe-area-context";
+import { JaxConstants } from "../v2/app/constants/master";
+import { PrototypeScreen } from "../v2/app/elements/screens/prototype-screen";
+import { DashPlayer } from "../v2/app/elements/stream";
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export default function Index()
+{
+  return (
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: JaxConstants.RGB[12] }}
+      edges={["bottom", "left", "right", "top"]}
+    >
+      <PrototypeScreen element={<DashPlayer />} />
+    </SafeAreaView>
+  )
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

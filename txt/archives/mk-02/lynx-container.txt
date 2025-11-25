@@ -1,0 +1,38 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+import { useLayout } from "@/common/vanilla/hooks/use-layout"
+import { Percent } from "@/common/water/constants/percent"
+import React from "react"
+import { LayoutRectangle, View } from "react-native"
+import { LynxBar } from "./lynx-bar"
+import { LYNX_SECTION_ARRAY } from "./lynx-data"
+import { LynxView } from "./lynx-view"
+import { useLynx } from "./use-lynx"
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export function LynxContainer()
+{
+  const lynxHook = useLynx({ sectionArray: LYNX_SECTION_ARRAY, })
+
+  const { layout: lynxContainerLayout, handleLayout: handleLynxContainerLayout } = useLayout()
+  const render = (lynxContainerLayout: LayoutRectangle) => {
+    const lynxBarHeight = 48
+    const lynxViewHeight = Math.max(0, lynxContainerLayout.height - lynxBarHeight)
+    return (
+      <>
+        <LynxView lynxHook={lynxHook} lynxViewListWidth={lynxContainerLayout.width} lynxViewListHeight={lynxViewHeight} />
+        <LynxBar lynxHook={lynxHook} lynxBarWidth={lynxContainerLayout.width} lynxBarHeight={lynxBarHeight} />
+      </>
+    )
+  }
+
+  // Return Component
+  return (
+    <View style={{ width: Percent[100], height: Percent[100] }} onLayout={handleLynxContainerLayout}>
+      {lynxContainerLayout !== null ? render(lynxContainerLayout) : <></>}
+    </View>
+  )
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

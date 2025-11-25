@@ -1,0 +1,49 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+import React from "react";
+import { LayoutChangeEvent, Pressable } from "react-native";
+import Animated, { DerivedValue, interpolate, SharedValue, useAnimatedStyle, withTiming } from "react-native-reanimated";
+import { lynxStyles } from "./lynx-styles";
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export type LynxBarItemProps = {
+  index: number
+  width?: number
+  height?: number
+  element: React.ReactNode
+  sharedCurrentScrollFactor: SharedValue<number>
+  sharedActiveSectionIndex: DerivedValue<number>
+  handleLayout: (event: LayoutChangeEvent) => void
+}
+
+export function LynxBarItem(props: LynxBarItemProps)
+{
+  const { index, width, height, element, sharedCurrentScrollFactor, sharedActiveSectionIndex, handleLayout } = props
+
+  const animatedStyle = useAnimatedStyle(() => {
+    const distance = Math.abs(index - sharedCurrentScrollFactor.value)
+    const opacity = interpolate(distance, [0, 1, 2, 3, 4], [1, 0.5, 0.3, 0.1, 0])
+    return { opacity }
+  })
+
+  const handlePress = (index: number) => {
+    if (index !== sharedActiveSectionIndex.value) {
+      sharedCurrentScrollFactor.value = withTiming(index, { duration: 350 })
+    }
+  }
+
+  return (
+    <Pressable
+      style={[lynxStyles.lynxBarItem, { width: width, height: height }]}
+      onPress={() => handlePress(index)}
+      onLayout={handleLayout}
+    >
+      <Animated.View style={animatedStyle}>
+        {element}
+      </Animated.View>
+    </Pressable>
+  )
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

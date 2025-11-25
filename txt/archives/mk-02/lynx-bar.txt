@@ -1,0 +1,79 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+import { useListItemLayoutIndexMap } from "@/common/vanilla/hooks/use-list-item-layout-index-map";
+import { useMemo, useRef } from "react";
+import Animated, { interpolate, scrollTo, useAnimatedReaction, useAnimatedRef, useAnimatedScrollHandler } from "react-native-reanimated";
+import { LynxBarItem } from "./lynx-bar-item";
+import { lynxStyles } from "./lynx-styles";
+import { LynxHook } from "./use-lynx";
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export type LynxBarProps = {
+  lynxHook: LynxHook,
+  lynxBarWidth: number,
+  lynxBarHeight: number
+}
+
+export function LynxBar({ lynxHook, lynxBarWidth, lynxBarHeight }: LynxBarProps)
+{
+  const { listItemLayoutIndexMap: lynxBarListItemLayoutIndexMap, handleLayoutListItem: handleLayoutLynxBarListItem } = useListItemLayoutIndexMap(lynxHook.lynxSectionCount)
+  
+  const lynxBarScrollPositionArray = useMemo(() => lynxBarListItemLayoutIndexMap !== null
+    ? Object.values(lynxBarListItemLayoutIndexMap).map(layout => layout.x)
+    : null, [lynxBarListItemLayoutIndexMap])
+  
+  const isScrollingRef = useRef<boolean>(false)
+
+  const lynxBarScrollHandler = useAnimatedScrollHandler({
+    onBeginDrag: () => {isScrollingRef.current = true },
+    onScroll: (event) => {
+      if (!isScrollingRef.current) { return }
+      if (lynxBarScrollPositionArray === null) { return }
+      const currentScrollPosition = event.contentOffset.x
+      const updatedScrollFactor = interpolate(currentScrollPosition, [lynxBarScrollPositionArray[lynxHook.lynxFloorScrollFactor.value], lynxBarScrollPositionArray[lynxHook.lynxCeilingScrollFactor.value]], [lynxHook.lynxFloorScrollFactor.value, lynxHook.lynxCeilingScrollFactor.value])
+      if (updatedScrollFactor !== undefined) { lynxHook.lynxCurrentScrollFactor.set(updatedScrollFactor)}
+    },
+    onEndDrag: () => { isScrollingRef.current = false }
+  }, [lynxBarScrollPositionArray])
+
+  const lynxBarRef = useAnimatedRef<Animated.FlatList>()
+  useAnimatedReaction(
+    () => lynxHook.lynxCurrentScrollFactor.value, (updatedScrollFactor) => {
+      if (lynxBarScrollPositionArray === null) { return }
+      const updatedScrollPosition = interpolate(updatedScrollFactor, [lynxHook.lynxFloorScrollFactor.value, lynxHook.lynxCeilingScrollFactor.value], [lynxBarScrollPositionArray[lynxHook.lynxFloorScrollFactor.value], lynxBarScrollPositionArray[lynxHook.lynxCeilingScrollFactor.value]])
+      if (updatedScrollPosition !== undefined) { scrollTo(lynxBarRef, updatedScrollPosition, 0, true)}
+    }, [lynxBarScrollPositionArray] // idk for deps
+  );
+
+  return (
+    <Animated.FlatList
+      ref={lynxBarRef}
+      style={[lynxStyles.lynxBar, { width: lynxBarWidth, height: lynxBarHeight }]}
+      contentContainerStyle={[lynxStyles.lynxBarList, {
+        paddingLeft: lynxBarListItemLayoutIndexMap !== null ? lynxBarWidth / 2 - lynxBarListItemLayoutIndexMap[0].width / 2 : undefined,
+        paddingRight: lynxBarListItemLayoutIndexMap !== null ? lynxBarWidth / 2 - lynxBarListItemLayoutIndexMap[lynxHook.lynxSectionCount - 1].width / 2 : undefined
+      }]}
+      horizontal
+      onScroll={lynxBarScrollHandler}
+      showsHorizontalScrollIndicator={false}
+      snapToOffsets={lynxBarScrollPositionArray || undefined}
+      decelerationRate="fast"
+      data={lynxHook.lynxSectionArray}
+      keyExtractor={(item) => item.lynxSectionKey}
+      renderItem={({ item, index }) => (
+        <LynxBarItem
+          key={item.lynxSectionKey}
+          index={index}
+          height={lynxBarHeight}
+          element={item.lynxBarItemElement}
+          sharedCurrentScrollFactor={lynxHook.lynxCurrentScrollFactor}
+          sharedActiveSectionIndex={lynxHook.lynxActiveSectionIndexUI}
+          handleLayout={handleLayoutLynxBarListItem(index)}
+        />
+      )}
+    />
+  )
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

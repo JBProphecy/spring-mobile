@@ -1,0 +1,33 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+import { RGB } from "@/common/water/constants/color";
+import { StyleSheet } from "react-native";
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const lynxStyles = StyleSheet.create({
+  lynxBar: {},
+  lynxBarList: {
+    flexDirection: "row"
+  },
+  lynxBarItem: {
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  lynxView: {},
+  lynxViewList: {
+    flexDirection: "row"
+  },
+  lynxViewItem: {
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  lynxText: {
+    fontWeight: "bold",
+    fontSize: 24, // half manual for now
+    lineHeight: 24,
+    color: RGB[208]
+  }
+})
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
