@@ -1,9 +1,9 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import { RGB } from "@/src/v2/app/constants";
-import { JaxConstantsApp } from "@/src/v2/app/constants/app/master";
 import { useSystemFontScale } from "@/src/v2/app/hooks/system-font-scale";
-import { Styles } from "@/src/v2/app/types/react-native";
+import { RGB } from "@/src/v2/app/modules/jax/constants";
+import { JaxConstantsApp } from "@/src/v2/app/modules/jax/constants/app/master";
+import { Styles } from "@/src/v2/app/modules/jax/types/react-native";
 import { Text, TextProps } from "react-native";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

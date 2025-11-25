@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import { JaxConstantsApp } from "@/src/v2/app/constants/app/master"
-import { JaxConstants } from "@/src/v2/app/constants/master"
+import { JaxConstantsApp } from "@/src/v2/app/modules/jax/constants/app/master"
+import { JaxConstants } from "@/src/v2/app/modules/jax/constants/master"
 
 export namespace BasicTextInputConstants
 {

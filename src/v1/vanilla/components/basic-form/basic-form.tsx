@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import { Percent } from "@/src/v2/app/constants";
+import { Percent } from "@/src/v2/app/modules/jax/constants";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import { BasicFormSpace } from "../basic-form-space/basic-form-space";

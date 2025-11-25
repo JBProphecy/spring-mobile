@@ -2,7 +2,7 @@
 
 import Svg, { Path } from "react-native-svg"
 import { useSystemFontScale } from "../hooks/system-font-scale"
-import { JaxTypes } from "../types/master"
+import { JaxTypes } from "../modules/jax/types/master"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

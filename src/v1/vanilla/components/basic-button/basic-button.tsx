@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import { useSystemFontScale } from "@/src/v2/app/hooks/system-font-scale";
-import { Styles } from "@/src/v2/app/types/react-native";
+import { Styles } from "@/src/v2/app/modules/jax/types/react-native";
 import { useState } from "react";
 import { ColorValue, DimensionValue, GestureResponderEvent, Pressable, PressableProps, StyleSheet, Text } from "react-native";
 import Animated, { useAnimatedStyle, useDerivedValue, useSharedValue, withTiming } from "react-native-reanimated";

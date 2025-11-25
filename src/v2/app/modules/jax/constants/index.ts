@@ -1,7 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import { StyleSheet } from "react-native";
-import { JaxTypesColor } from "../types/color/master";
 import { JaxTypes } from "../types/master";
 import { JaxUtilsColor } from "../utils/color/master";
 
@@ -16,6 +15,8 @@ export const Percent = {
   100: "100%"
 } as const satisfies Record<number, JaxTypes.Percent<number>>
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 export const RGB = {
   0: JaxUtilsColor.buildNeutralRGB(0),
   8: JaxUtilsColor.buildNeutralRGB(8),
@@ -24,7 +25,9 @@ export const RGB = {
   128: JaxUtilsColor.buildNeutralRGB(128),
   176: JaxUtilsColor.buildNeutralRGB(176),
   208: JaxUtilsColor.buildNeutralRGB(208),
-} as const satisfies Record<number, JaxTypesColor.RGB<number, number, number>>
+} as const satisfies Record<number, JaxTypes.Color.RGB<number, number, number>>
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const Style = StyleSheet.create(
   {

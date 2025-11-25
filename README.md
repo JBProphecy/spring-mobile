@@ -1,50 +1,61 @@
-# Welcome to your Expo app 👋
+# **Spring Mobile**
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+This is my place to work with **`React Native`** and **`Expo`**.
 
-## Get started
+---
 
-1. Install dependencies
+## **Highlights**
 
-   ```bash
-   npm install
-   ```
+- ✨ This file was enhanced on `11/25/2025`.
 
-2. Start the app
+---
 
-   ```bash
-   npx expo start
-   ```
+## **Quick Start**
 
-In the output, you'll find options to open the app in a
+Enable **`Corepack`** if you haven't already.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+``` bash
+corepack enable
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+---
 
-## Learn more
+1. Open a terminal that supports **`Bash`**.
 
-To learn more about developing your project with Expo, look at the following resources:
+---
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+2. Navigate to where you want to clone this repository.
 
-## Join the community
+---
 
-Join our community of developers creating universal apps.
+3. Clone this repository.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+``` bash
+git clone https://github.com/JBProphecy/spring-mobile
+```
+
+---
+
+4. Navigate into the cloned repository.
+
+``` bash
+cd spring-mobile
+```
+
+---
+
+5. Install dependencies.
+
+``` bash
+pnpm install
+```
+
+---
+
+6. Start the application.
+
+``` bash
+pnpm start
+```
+
+---

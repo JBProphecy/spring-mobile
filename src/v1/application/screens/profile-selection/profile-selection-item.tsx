@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import { JaxConstants } from "@/src/v2/app/constants/master"
 import { useSystemFontScale } from "@/src/v2/app/hooks/system-font-scale"
+import { JaxConstants } from "@/src/v2/app/modules/jax/constants/master"
 import React from "react"
 import { Image, StyleSheet, Text, View } from "react-native"
 import Animated, { DerivedValue, interpolate, SharedValue, useAnimatedStyle, useDerivedValue, withTiming } from "react-native-reanimated"

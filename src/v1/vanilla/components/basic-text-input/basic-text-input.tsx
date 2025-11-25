@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import { JaxConstants } from "@/src/v2/app/constants/master";
 import { useSystemFontScale } from "@/src/v2/app/hooks/system-font-scale";
+import { JaxConstants } from "@/src/v2/app/modules/jax/constants/master";
 import { StyleSheet, TextInput } from "react-native";
 import Animated, { useAnimatedStyle, useDerivedValue, useSharedValue, withTiming } from "react-native-reanimated";
 import { useTextInputState } from "../../hooks/use-text-input-state";

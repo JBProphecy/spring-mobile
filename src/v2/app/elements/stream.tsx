@@ -2,7 +2,7 @@
 
 import { useVideoPlayer, VideoSource, VideoView } from "expo-video";
 import { View } from "react-native";
-import { JaxConstants } from "../constants/master";
+import { JaxConstants } from "../modules/jax/constants/master";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

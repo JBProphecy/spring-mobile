@@ -2,8 +2,8 @@
 
 import { BasicButton } from "@/src/v1/vanilla/components/basic-button/basic-button";
 import { useLayout } from "@/src/v1/vanilla/hooks/use-layout";
-import { JaxConstants } from "@/src/v2/app/constants/master";
 import { useSystemFontScale } from "@/src/v2/app/hooks/system-font-scale";
+import { JaxConstants } from "@/src/v2/app/modules/jax/constants/master";
 import { useCallback, useMemo } from "react";
 import { FlatList, ListRenderItem, NativeScrollEvent, NativeSyntheticEvent, StyleSheet, Text, View } from "react-native";
 import { useDerivedValue, useSharedValue } from "react-native-reanimated";
