@@ -63,7 +63,7 @@ export function ProfileSelectionScreen({
 
   const renderItem: ListRenderItem<ProfileSelectionModel> = useCallback(({ item, index, separators }) => {
     return <MemoizedProfileSelectionItem profile={item} index={index} scrollFactor={profileListScrollFactor} activeIndex={profileListActiveItemIndex} cardWidth={cardWidth} />
-  }, [cardWidth])
+  }, [cardWidth, profileListScrollFactor, profileListActiveItemIndex])
 
   return (
     <View style={styles.screen}>

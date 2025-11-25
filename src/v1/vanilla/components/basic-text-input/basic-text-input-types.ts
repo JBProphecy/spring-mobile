@@ -1,25 +1,24 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import { Styles } from "../../types/jax-styles"
-import { ReactNativeProps } from "../../types/react-native-props"
+import { JaxTypes } from "@/src/v2/app/types/master"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export namespace BasicTextInputTypes
 {
-  export type FilteredTextInputProps = Omit<ReactNativeProps.TextInput,
+  export type FilteredTextInputProps = Omit<JaxTypes.ReactNative.Props.TextInput,
     "style" |
     "placeholderTextColor"
   >
 
   export type OptionalProps = {
-    width?: Styles.Width
-    color?: Styles.Color
+    width?: JaxTypes.ReactNative.Styles.Width
+    color?: JaxTypes.ReactNative.Styles.Color
     fontSize?: number
     padding?: number
     borderWidth?: number
     borderRadius?: number
-    backgroundColor?: Styles.BackgroundColor
+    backgroundColor?: JaxTypes.ReactNative.Styles.BackgroundColor
     transitionDuration?: number
     textInputProps?: FilteredTextInputProps
   }

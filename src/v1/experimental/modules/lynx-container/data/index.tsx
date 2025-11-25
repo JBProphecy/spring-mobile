@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import { CreateAccountForm } from "@/src/application/forms/create-account-form"
+import { CreateAccountForm } from "@/src/v1/application/form-screens/create-account/create-account-form"
 import { Ionicons } from "@expo/vector-icons"
 import { StyleSheet, Text, View } from "react-native"
 

@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import { StyleSheet } from "react-native";
-import Animated, { DerivedValue, scrollTo, SharedValue, useAnimatedReaction, useAnimatedRef, useSharedValue } from "react-native-reanimated";
+import Animated, { DerivedValue, scrollTo, SharedValue, useAnimatedReaction, useAnimatedRef } from "react-native-reanimated";
 import { LynxContainerItemData } from "../../data";
 import { DisplayItem } from "./display-item";
 
@@ -24,7 +24,7 @@ export function DisplayBox({
   displayItemWidth,
   displayItemHeight }: DisplayBoxProps)
 {
-  const startScrollFactor = useSharedValue(0) // 0 doesn't matter I guess
+  // const startScrollFactor = useSharedValue(0) // 0 doesn't matter I guess
 
   // const gesture = Gesture.Pan()
   //   .onBegin(() => {

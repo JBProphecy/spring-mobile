@@ -46,7 +46,7 @@ const ClientRouteKeyArray = [
   "DeleteYourProfile",
   "DeleteYourProfileVerify",
   "CloseYourProfile"
-] as const satisfies Array<ClientRouteKey>
+] as const satisfies ClientRouteKey[]
 
 export type ClientRouteKeyVariant = typeof ClientRouteKeyArray[number]
 

@@ -5,7 +5,7 @@ import { AbstractValidationResult, ComplexValidationResult } from "../../network
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function hasResults(validation: AbstractValidationResult): validation is ComplexValidationResult<Object> {
+function hasResults(validation: AbstractValidationResult): validation is ComplexValidationResult<object> {
   return "results" in validation
 }
 
@@ -28,7 +28,7 @@ export function ValidationMessageRow({ validation, depth = 0 }: ValidationMessag
 }
 
 type ValidationMessageBlockProps = {
-  validations: Object
+  validations: object
   depth?: number
 }
 
@@ -37,7 +37,7 @@ export function ValidationMessageBlock({ validations, depth = 0 }: ValidationMes
 }
 
 type OptionalValidationMessageBlockProps = {
-  validations: Object | null | undefined
+  validations: object | null | undefined
   depth?: number
 }
 
