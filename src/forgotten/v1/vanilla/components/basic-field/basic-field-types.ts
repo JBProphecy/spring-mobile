@@ -1,0 +1,26 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+import { BasicTextInputTypes } from "@/src/forgotten/v1/vanilla/components/basic-text-input/basic-text-input-types"
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export namespace BasicFieldTypes
+{
+  export type FilteredTextInputProps = Omit<BasicTextInputTypes.FilteredTextInputProps,
+    "value" |
+    "onChange" |
+    "onChangeText"
+  >
+
+  export type OptionalProps = {
+    textInputProps?: FilteredTextInputProps
+  }
+
+  export type Props = {
+    value: string,
+    onChangeText: (text: string) => void
+    optionalProps?: OptionalProps
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

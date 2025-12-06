@@ -1,0 +1,20 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+import { JaxConstantsApp } from "@/src/application/modules/jax/constants/app/master"
+import { JaxConstants } from "@/src/application/modules/jax/constants/master"
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export namespace BasicButtonConstants
+{
+  export const COLOR = JaxConstants.RGB[176]
+  export const FONT_SIZE = JaxConstantsApp.DEFAULT_FONT_SIZE
+  export const LINE_HEIGHT = JaxConstantsApp.DEFAULT_LINE_HEIGHT
+  export const PADDING_SCALE = 1/2
+  export const BORDER_WIDTH_SCALE = 1/6
+  export const BORDER_RADIUS_SCALE = 1/6
+  export const TRANSITION_DURATION = 50
+  export const DISABLED = false
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

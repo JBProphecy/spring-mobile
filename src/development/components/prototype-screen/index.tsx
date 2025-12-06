@@ -1,0 +1,30 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+import React from "react"
+import { StyleSheet, View } from "react-native"
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export type PrototypeScreenProps = {
+  children?: React.ReactNode
+}
+
+export function PrototypeScreen({ children }: PrototypeScreenProps) {
+  return (
+    <View style={PrototypeScreenStyles.screen}>
+      {children}
+    </View>
+  )
+}
+
+export const PrototypeScreenStyles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    width: "100%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center"
+  }
+})
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

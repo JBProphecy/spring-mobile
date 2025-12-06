@@ -2,7 +2,8 @@
 
 import { Stack } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { SystemFontScaleProvider } from "../v2/app/context/system-font-scale";
+import { SystemFontScaleProvider } from "../application/modules/system-font-scale";
+import { RootDirectoryProvider } from "../development/random/mk-02";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -11,9 +12,11 @@ export default function RootLayout()
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SystemFontScaleProvider>
-        <Stack>
-          <Stack.Screen name="index" options={{ headerShown: false }} />
-        </Stack>
+        <RootDirectoryProvider>
+          <Stack>
+            <Stack.Screen name="index" options={{ headerShown: false }} />
+          </Stack>
+        </RootDirectoryProvider>
       </SystemFontScaleProvider>
     </GestureHandlerRootView>
   )
